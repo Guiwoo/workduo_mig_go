@@ -1,3 +1,5 @@
+server:
+    port: ":8001"
 database:
     max_idle: 10
     max_open: 100

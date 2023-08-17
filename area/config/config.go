@@ -7,7 +7,12 @@ import (
 	"os"
 )
 
+type AreaServerConfig struct {
+	Port string `yaml:"port"`
+}
+
 type AreaConfig struct {
+	Server   AreaServerConfig  `yaml:"server"`
 	Database database.DBConfig `yaml:"database"`
 }
 
