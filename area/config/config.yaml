@@ -1,0 +1,7 @@
+database:
+    max_idle: 10
+    max_open: 100
+    max_life_cycle: 3600
+    log_level: debug
+    databases:
+         workduo_area : "guiwoo:guiwoo@tcp(127.0.0.1:3306)/workout_area?charset=utf8mb4&parseTime=True&loc=Local"
