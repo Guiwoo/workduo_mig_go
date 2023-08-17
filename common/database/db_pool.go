@@ -52,7 +52,7 @@ func (pool *DBPool) ConnectDatabases(dsn, logLevel string, maxIdle, maxConn, max
 
 	return database, nil
 }
-func (pool *DBPool) ConnectAll(cfg *Database) error {
+func (pool *DBPool) ConnectAll(cfg *DBConfig) error {
 	for k, v := range cfg.Databases {
 		if db, err := pool.ConnectDatabases(v, cfg.LogLevel, cfg.MaxIdle, cfg.MaxConn, cfg.MaxLifeCycle); err != nil {
 			logrus.WithField("database", k).Errorf("connect database failure - %s", err)

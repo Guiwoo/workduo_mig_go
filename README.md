@@ -15,7 +15,7 @@
 <a href="https://alive-tern-b83.notion.site/WORKDUO-55b0477f47c74e0683678ba35d311968" target="_blank">API 명세서 보러가기 </a>
 
 ## 4. 개발환경 
-- Go 1.21.0
+- Go 1.20.0
 - MySql 8.0.25
 - Echo, GORM 은 Module 은 work 로 관리
 

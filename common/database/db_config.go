@@ -1,6 +1,6 @@
 package database
 
-type Database struct {
+type DBConfig struct {
 	MaxIdle      int               `yaml:"max_idle"`
 	MaxConn      int               `yaml:"max_conn"`
 	MaxLifeCycle int               `yaml:"max_life_cycle"`
