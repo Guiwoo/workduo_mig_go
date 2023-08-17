@@ -1,7 +1,8 @@
 package main
 
 import (
-	"area"
+	"area/application"
+	"area/config"
 	"common/database"
 	"flag"
 	"fmt"
@@ -11,13 +12,13 @@ import (
 
 var (
 	//실행하는 파일 의 go.mod 기준으로 경로 탐색
-	configFile = flag.String("cfg", "./cmd/config.yaml", "The path to the config file.")
+	configFile = flag.String("cfg", "./config/config.yaml", "The path to the config file.")
 )
 
 func main() {
 	flag.Parse()
 
-	cfg := area.AreaConfig{}
+	cfg := config.AreaConfig{}
 	if err := cfg.LoadConfig(*configFile); err != nil {
 		logrus.WithError(err).Error("config load failure")
 		os.Exit(0)
@@ -30,6 +31,8 @@ func main() {
 		logrus.WithError(err).Error("database connect failure")
 		os.Exit(1)
 	}
+
+	app := application.NewAreaService(&cfg, db)
 
 	fmt.Println(db)
 }

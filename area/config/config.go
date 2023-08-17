@@ -1,4 +1,4 @@
-package area
+package config
 
 import (
 	"common/database"
