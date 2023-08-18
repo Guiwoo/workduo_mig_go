@@ -2,10 +2,20 @@ package context
 
 import (
 	"area/application/service"
+	"common/response"
 	"context"
 	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 )
+
+type AreaAPIService interface {
+	GetRequestData() interface{}
+	ApiName() string
+	Handler() *response.WorkDuoResponse
+	IsRequiredAuth() bool
+	GetContext() echo.Context
+	Logger() *logrus.Entry
+}
 
 type APIContext struct {
 	echo.Context
