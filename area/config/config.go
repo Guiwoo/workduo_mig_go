@@ -10,10 +10,14 @@ import (
 type AreaServerConfig struct {
 	Port string `yaml:"port"`
 }
+type AreaSchedulerConfig struct {
+	Path string `yaml:"path"`
+}
 
 type AreaConfig struct {
-	Server   AreaServerConfig  `yaml:"server"`
-	Database database.DBConfig `yaml:"database"`
+	Server    AreaServerConfig    `yaml:"server"`
+	Scheduler AreaSchedulerConfig `yaml:"scheduler"`
+	Database  database.DBConfig   `yaml:"database"`
 }
 
 func (c *AreaConfig) LoadConfig(file string) error {

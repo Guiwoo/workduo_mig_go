@@ -1,6 +1,8 @@
 package application
 
 import (
+	"area/application/scheduler"
+	"area/application/service"
 	"area/config"
 	"area/interfaces/restapis"
 	"common/database"
@@ -11,11 +13,11 @@ import (
 )
 
 type AreaService struct {
-	Config    *config.AreaConfig
-	Logger    *logrus.Logger
-	AreaDB    *gorm.DB
-	Pool      database.DBPool
-	APIServer *restapis.APIService
+	Config          *config.AreaConfig
+	Logger          *logrus.Logger
+	AreaDB          *gorm.DB
+	Pool            database.DBPool
+	TemplateService *restapis.TemplateService
 }
 
 func (a *AreaService) setUpDB(cfg *config.AreaConfig) {
@@ -31,19 +33,22 @@ func (a *AreaService) setUpDB(cfg *config.AreaConfig) {
 
 func (a *AreaService) SetUp(cfg *config.AreaConfig) {
 	a.setUpDB(cfg)
-	a.APIServer = restapis.NewAPIService(cfg.Server.Port)
+	a.TemplateService = restapis.NewAPIService(cfg.Server.Port, service.NewService(a.AreaDB))
 }
 
 func (a *AreaService) Run() error {
+	areaScheduler := scheduler.NewAreaScheduler(a.AreaDB, a.Config, a.Logger)
 	stream := pipeline.NewStream()
-	stream.Add(a.APIServer.Run)
+	stream.Add(a.TemplateService.Run)
+	stream.Add(areaScheduler.Run)
 	return stream.Run()
 }
 
 func NewAreaService(cfg *config.AreaConfig) *AreaService {
-	service := &AreaService{
+	svc := &AreaService{
 		Config: cfg,
+		Logger: logrus.StandardLogger(),
 	}
-	service.SetUp(cfg)
-	return service
+	svc.SetUp(cfg)
+	return svc
 }

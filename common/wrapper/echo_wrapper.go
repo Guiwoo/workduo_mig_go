@@ -75,6 +75,10 @@ func GetRequestTime(c echo.Context) time.Time {
 	}
 }
 
+func (e *EchoWrapper) SetGroup(prefix string, m ...echo.MiddlewareFunc) *echo.Group {
+	return e.core.Group(prefix, m...)
+}
+
 func NewEchoWrapper(listen string) *EchoWrapper {
 	e := &EchoWrapper{
 		core:   echo.New(),
