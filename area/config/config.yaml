@@ -1,5 +1,7 @@
 server:
     port: ":8001"
+scheduler:
+    path: "/Users/guiwoopark/Desktop/workduo/area/interfaces/data"
 database:
     max_idle: 10
     max_open: 100
