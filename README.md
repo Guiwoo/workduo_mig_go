@@ -22,6 +22,31 @@
 ## 5. 프로젝트 구조
 모듈이 추가될때마다 업데이트 예정
 ```
+workduo
 ├── README.md
+├── .gitignore
 ├── go.work
+├── common
+│   ├── database
+│   ├── entity
+│   │   ├── area  // 지역 
+│   ├── pipeline
+│   ├── response
+│   ├── wrapper
+│   ├── go.mod
+├── area
+│   ├── adapters
+│   ├── application
+│   │   ├── ports  
+│   │   ├── scheduler   
+│   │   ├── service   
+│   ├── cmd
+│   ├── config
+│   ├── domain
+│   ├── infrastructure
+│   │   ├── persistence   
+│   ├── interfaces
+│   │   ├── data   
+│   │   ├── restapis  
+│   ├── go.mod
 ```
