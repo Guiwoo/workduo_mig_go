@@ -3,9 +3,7 @@ package main
 import (
 	"area/application"
 	"area/config"
-	"common/database"
 	"flag"
-	"fmt"
 	"github.com/sirupsen/logrus"
 	"os"
 )
@@ -24,15 +22,10 @@ func main() {
 		os.Exit(0)
 	}
 
-	pool := database.NewDBPool()
+	app := application.NewAreaService(&cfg)
 
-	db, err := pool.ConnectArea(cfg.Database.Databases[database.DBAREA], cfg.Database.LogLevel, cfg.Database.MaxIdle, cfg.Database.MaxConn, cfg.Database.MaxLifeCycle)
-	if err != nil {
-		logrus.WithError(err).Error("database connect failure")
+	if err := app.Run(); err != nil {
+		logrus.WithError(err).Error("application run failure")
 		os.Exit(1)
 	}
-
-	app := application.NewAreaService(&cfg, db)
-
-	fmt.Println(db)
 }
