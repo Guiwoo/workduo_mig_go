@@ -11,21 +11,17 @@ type WorkDuoResponse struct {
 	Data interface{} `json:"data,omitempty"`
 }
 
-func (w *WorkDuoResponse) Send(c echo.Context) error {
-	return c.JSON(http.StatusOK, w)
-}
-
-func FailJSON(code int, msg string) *WorkDuoResponse {
-	return &WorkDuoResponse{
+func FailJSON(ctx echo.Context, code int, msg string) error {
+	return ctx.JSON(http.StatusOK, &WorkDuoResponse{
 		Code: code,
 		Msg:  msg,
 		Data: nil,
-	}
+	})
 }
-func SuccessJSON(data interface{}) *WorkDuoResponse {
-	return &WorkDuoResponse{
+func SuccessJSON(ctx echo.Context, data interface{}) error {
+	return ctx.JSON(http.StatusOK, &WorkDuoResponse{
 		Code: http.StatusOK,
 		Msg:  "success",
 		Data: data,
-	}
+	})
 }
