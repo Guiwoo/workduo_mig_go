@@ -1,0 +1,11 @@
+Dsn:
+  "guiwoo:guiwoo@tcp(127.0.0.1:3306)/workout_user?charset=utf8mb4&parseTime=True&loc=Local"
+Listen:
+  ":10002"
+Log:
+  Path:
+    "/Users/guiwoopark/Desktop/workduo/log"
+  FileName:
+    "wd_user"
+  Level:
+    "INFO"

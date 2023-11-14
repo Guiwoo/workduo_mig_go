@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 	"net/http"
 	"wd_area/pkg/model"
-	"wd_common/response"
+	"wd_common/wd_response"
 )
 
 const FailGetSiggService = "시군구 조회를 실패 했습니다."
@@ -29,14 +29,14 @@ type GetSiggService struct {
 
 func (service *GetSiggService) Handle(ctx echo.Context) error {
 	if err := ctx.Bind(&service.req); err != nil {
-		return response.FailJSON(ctx, http.StatusBadRequest, FailGetSiggService)
+		return wd_response.FailJSON(ctx, http.StatusBadRequest, FailGetSiggService)
 	}
 
 	tb := model.SiggArea{}
 	data, err := tb.GetAreaByCity(ctx.Request().Context(), service.db, service.req.ID)
 	if err != nil {
 		service.log.Err(err).Msg("fail to get sigg data")
-		return response.FailJSON(ctx, http.StatusInternalServerError, FailGetSiggService)
+		return wd_response.FailJSON(ctx, http.StatusInternalServerError, FailGetSiggService)
 	}
 
 	sigg := make([]responseGetSiggService, len(data))
@@ -49,7 +49,7 @@ func (service *GetSiggService) Handle(ctx echo.Context) error {
 		}
 	}
 
-	return response.SuccessJSON(ctx, sigg)
+	return wd_response.SuccessJSON(ctx, sigg)
 }
 
 func NewGetSiggService(db *gorm.DB, log zerolog.Logger) *GetSiggService {

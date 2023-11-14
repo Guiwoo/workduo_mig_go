@@ -105,11 +105,12 @@ func (service *Scheduler) Run(ctx context.Context) <-chan error {
 		defer close(c)
 		defer m.Stop()
 
+	Loop:
 		for {
 			select {
 			case <-ctx.Done():
 				service.log.Info().Msg("context canceled scheduler is stopping")
-				break
+				break Loop
 			case tm := <-m.C:
 				service.process(tm)
 			}
@@ -119,7 +120,7 @@ func (service *Scheduler) Run(ctx context.Context) <-chan error {
 	return c
 }
 
-func NewScheduler(db *gorm.DB, log zerolog.Logger) *Scheduler {
+func NewScheduler(db *gorm.DB, log zerolog.Logger, path string) *Scheduler {
 	now := time.Now()
-	return &Scheduler{db: db, log: log, processTime: now, lastExecution: now}
+	return &Scheduler{db: db, log: log, processTime: now, lastExecution: now, path: path}
 }

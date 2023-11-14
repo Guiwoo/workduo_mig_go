@@ -29,6 +29,6 @@ func New(db *gorm.DB, cfg config.Area) *App {
 	log := wd_log.New(cfg.Log.Path, cfg.Log.FileName, cfg.Log.Level)
 	return &App{
 		Server:    NewAreaRestAPI(db, cfg.Listen, log),
-		Schedluer: NewScheduler(db, log),
+		Schedluer: NewScheduler(db, log, cfg.DataPath.Path),
 	}
 }

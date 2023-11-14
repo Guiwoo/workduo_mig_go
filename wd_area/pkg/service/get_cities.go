@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 	"net/http"
 	"wd_area/pkg/model"
-	"wd_common/response"
+	"wd_common/wd_response"
 )
 
 const FailGetCitiesService = "도시 조회를 실패했습니다."
@@ -26,7 +26,7 @@ func (service GetCitiesService) Handle(ctx echo.Context) error {
 	data, err := tb.GetAllCity(ctx.Request().Context(), service.db)
 	if err != nil {
 		service.log.Err(err).Msg("fail to get db data")
-		return response.FailJSON(ctx, http.StatusInternalServerError, FailGetCitiesService)
+		return wd_response.FailJSON(ctx, http.StatusInternalServerError, FailGetCitiesService)
 	}
 
 	sido := make([]responseGetCities, len(data))
@@ -37,7 +37,7 @@ func (service GetCitiesService) Handle(ctx echo.Context) error {
 		}
 	}
 
-	return response.SuccessJSON(ctx, sido)
+	return wd_response.SuccessJSON(ctx, sido)
 }
 
 func NewGetCitiesService(db *gorm.DB, log zerolog.Logger) *GetCitiesService {

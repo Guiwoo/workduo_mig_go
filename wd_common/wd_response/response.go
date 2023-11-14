@@ -1,4 +1,4 @@
-package response
+package wd_response
 
 import (
 	"github.com/labstack/echo/v4"
