@@ -2,6 +2,9 @@ DSN:
   "guiwoo:guiwoo@tcp(127.0.0.1:3306)/workout_area?charset=utf8mb4&parseTime=True&loc=Local"
 LISTEN:
     ":10001"
+DATA:
+  Path:
+    "/Users/guiwoopark/Desktop/workduo/wd_area/data/HangJeongDong_ver20121210.geojson"
 Log:
   Path:
     "/Users/guiwoopark/Desktop/workduo/log"

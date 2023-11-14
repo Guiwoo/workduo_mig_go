@@ -9,12 +9,14 @@ import (
 )
 
 type App struct {
-	Server *AreaRestAPI
+	Server    *AreaRestAPI
+	Schedluer *Scheduler
 }
 
 func (app *App) Run() error {
 	stream := wd_streams.New()
 	stream.Add(app.Server.Run)
+	stream.Add(app.Schedluer.Run)
 	return stream.Run()
 }
 
@@ -26,6 +28,7 @@ func New(db *gorm.DB, cfg config.Area) *App {
 
 	log := wd_log.New(cfg.Log.Path, cfg.Log.FileName, cfg.Log.Level)
 	return &App{
-		Server: NewAreaRestAPI(db, cfg.Listen, log),
+		Server:    NewAreaRestAPI(db, cfg.Listen, log),
+		Schedluer: NewScheduler(db, log),
 	}
 }

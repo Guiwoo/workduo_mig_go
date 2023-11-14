@@ -9,9 +9,12 @@ import (
 )
 
 type Area struct {
-	Dsn    string    `yaml:"DSN"`
-	Listen string    `yaml:"LISTEN"`
-	Log    LogConfig `yaml:"Log"`
+	Dsn    string `yaml:"DSN"`
+	Listen string `yaml:"LISTEN"`
+	Data   struct {
+		Path string `yaml:"Path"`
+	} `yaml:"DATA"`
+	Log LogConfig `yaml:"Log"`
 }
 
 type LogConfig struct {
