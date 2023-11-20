@@ -17,17 +17,17 @@ type responseGetSiggService struct {
 	SidoID   string
 	SidoName string
 }
-type requestGetSiggService struct {
+type requestGetSigg struct {
 	ID string `param:"city_id"`
 }
 
-type GetSiggService struct {
+type GetSigg struct {
 	db  *gorm.DB
 	log zerolog.Logger
-	req requestGetSiggService
+	req requestGetSigg
 }
 
-func (service *GetSiggService) Handle(ctx echo.Context) error {
+func (service *GetSigg) Handle(ctx echo.Context) error {
 	if err := ctx.Bind(&service.req); err != nil {
 		return wd_response.FailJSON(ctx, http.StatusBadRequest, FailGetSiggService)
 	}
@@ -52,8 +52,8 @@ func (service *GetSiggService) Handle(ctx echo.Context) error {
 	return wd_response.SuccessJSON(ctx, sigg)
 }
 
-func NewGetSiggService(db *gorm.DB, log zerolog.Logger) *GetSiggService {
-	return &GetSiggService{
+func NewGetSigg(db *gorm.DB, log zerolog.Logger) *GetSigg {
+	return &GetSigg{
 		db:  db,
 		log: log,
 	}

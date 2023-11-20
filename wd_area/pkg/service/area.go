@@ -5,14 +5,14 @@ import (
 	"gorm.io/gorm"
 )
 
-type AreaService struct {
-	GetCities *GetCitiesService
-	GetSigg   *GetSiggService
+type Area struct {
+	GetCities *GetCities
+	GetSigg   *GetSigg
 }
 
-func New(db *gorm.DB, log zerolog.Logger) *AreaService {
-	return &AreaService{
-		GetCities: NewGetCitiesService(db, log),
-		GetSigg:   NewGetSiggService(db, log),
+func New(db *gorm.DB, log zerolog.Logger) *Area {
+	return &Area{
+		GetCities: NewGetCities(db, log),
+		GetSigg:   NewGetSigg(db, log),
 	}
 }

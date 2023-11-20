@@ -2,8 +2,9 @@ package main
 
 import (
 	"flag"
-	"fmt"
+	"log"
 	"wd_common/wd_database"
+	"wd_user/pkg/application"
 	"wd_user/pkg/config"
 )
 
@@ -23,5 +24,7 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Println(db)
+	app := application.New(db, cfg)
+
+	log.Fatal(app.Run())
 }
