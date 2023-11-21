@@ -28,25 +28,25 @@ workduo
 ├── go.work
 ├── common
 │   ├── database
-│   ├── entity
-│   │   ├── area  // 지역 
-│   ├── pipeline
+│   ├── log
+│   ├── streams
 │   ├── response
 │   ├── wrapper
 │   ├── go.mod
 ├── area
-│   ├── adapters
-│   ├── application
-│   │   ├── ports  
-│   │   ├── scheduler   
+│   ├── data
+│   ├── pkg
+│   │   ├── application  
+│   │   ├── config   
+│   │   ├── model   
 │   │   ├── service   
-│   ├── cmd
-│   ├── config
-│   ├── domain
-│   ├── infrastructure
-│   │   ├── persistence   
-│   ├── interfaces
-│   │   ├── data   
-│   │   ├── restapis  
-│   ├── go.mod
+│   ├── main.go
+├── member
+│   ├── pkg
+│   │   ├── application  
+│   │   ├── config   
+│   │   ├── model   
+│   │   ├── service   
+│   ├── main.go
+│   ├── go.mod   ├── go.mod
 ```
