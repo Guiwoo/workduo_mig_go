@@ -11,7 +11,7 @@ const URL = "/user/api/v1.0"
 
 type UserRestAPI struct {
 	*wd_wrapper.EchoWrapper
-	service *service.User
+	service *service.Member
 }
 
 func (api *UserRestAPI) route() {
@@ -22,7 +22,7 @@ func (api *UserRestAPI) route() {
 func NewUserRestAPI(db *gorm.DB, port string, log zerolog.Logger) *UserRestAPI {
 	api := &UserRestAPI{
 		EchoWrapper: wd_wrapper.NewEcho(port),
-		service:     service.NewUser(db, log),
+		service:     service.NewMember(db, log),
 	}
 
 	api.route()

@@ -6,13 +6,13 @@ import (
 	"wd_user/pkg/model"
 )
 
-type User struct {
+type Member struct {
 	SignUp *SignUp
 }
 
-func NewUser(db *gorm.DB, log zerolog.Logger) *User {
+func NewMember(db *gorm.DB, log zerolog.Logger) *Member {
 	repo := model.NewMemberRepository(db)
-	return &User{
+	return &Member{
 		SignUp: NewSignUp(repo, log),
 	}
 }
