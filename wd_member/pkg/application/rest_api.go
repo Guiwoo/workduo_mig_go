@@ -16,7 +16,9 @@ type UserRestAPI struct {
 
 func (api *UserRestAPI) route() {
 	core := api.SetGroup(URL)
+
 	core.POST("/member", api.service.SignUp.Handle)
+	core.POST("/login", api.service.Login.Handle)
 }
 
 func NewUserRestAPI(db *gorm.DB, port string, log zerolog.Logger) *UserRestAPI {

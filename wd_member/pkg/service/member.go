@@ -8,6 +8,7 @@ import (
 
 type Member struct {
 	SignUp *SignUp
+	Login  *Login
 }
 
 func NewMember(db *gorm.DB, log zerolog.Logger) *Member {
