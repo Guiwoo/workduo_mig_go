@@ -43,7 +43,7 @@ type Scheduler struct {
 func (service *Scheduler) insertData() error {
 	var result HangJeongDong
 	//데이터 읽어와서 인서트 처리
-	file, err := os.ReadFile(service.path + "/HangJeongDong_ver20230701.json")
+	file, err := os.ReadFile(service.path)
 	if err != nil {
 		service.log.Error().Err(err).Msg("fail to read file")
 		return err
