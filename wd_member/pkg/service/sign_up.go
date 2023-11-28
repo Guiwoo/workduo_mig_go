@@ -1,7 +1,6 @@
 package service
 
 import (
-	"errors"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog"
@@ -12,18 +11,7 @@ import (
 	"wd_user/pkg/model"
 )
 
-const (
-	FailSignUp    = "회원가입에 실패했습니다."
-	WrongBodyForm = "올바른 바디의 데이터 타입이 아닙니다."
-)
-
-var (
-	ErrRequiredName        = errors.New("name is required")
-	ErrWrongFormatEmail    = errors.New("email format is wrong")
-	ErrEmptyArea           = errors.New("area needs at least once")
-	ErrEmptyExercise       = errors.New("exercise needs at least once")
-	ErrWrongFormatPassword = errors.New("password should have special character and longer than 8 characters")
-)
+const FailSignUp = "회원가입에 실패했습니다."
 
 type signUpRequest struct {
 	Name      string   `json:"name"`

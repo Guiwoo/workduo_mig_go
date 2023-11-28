@@ -1,12 +1,21 @@
 package service
 
 import (
+	"errors"
 	"github.com/labstack/echo/v4"
 	"github.com/rs/zerolog"
+	"gorm.io/gorm"
+	"net/http"
+	"regexp"
+	"wd_common/wd_response"
 	"wd_user/pkg/model"
 )
 
+const FailLogin = "로그인에 실패했습니다."
+
 type loginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 type Login struct {
@@ -15,9 +24,62 @@ type Login struct {
 	req  loginRequest
 }
 
+func (service *Login) validateEmail() bool {
+	pattern := `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`
+	if ok, err := regexp.MatchString(pattern, service.req.Email); !ok || err != nil {
+		return false
+	}
+	return true
+}
+
+func (service *Login) validateRequest() error {
+	if service.validateEmail() == false {
+		return ErrWrongFormatEmail
+	}
+	return nil
+}
+
+func (service *Login) getHashedPassword() (string, error) {
+	m := &model.Member{Password: service.req.Password}
+	if err := m.HashPassword(); err != nil {
+		service.log.Error().Err(err).Msgf("fail to hash password %+v", service.req)
+		return "", err
+	}
+	return m.Password, nil
+}
+
 func (service *Login) Handle(ctx echo.Context) error {
-	// [API 명세서] https://alive-tern-b83.notion.site/f4d237db90084099a0db9eebb2fea03e
-	// [Spring-boot] https://github.com/Guiwoo/WorkDuo_dev
+	if err := ctx.Bind(&service.req); err != nil {
+		service.log.Error().Err(err).Msgf("fail to bind req %+v", service.req)
+		return wd_response.FailJSON(ctx, http.StatusBadRequest, WrongBodyForm)
+	}
+
+	if err := service.validateRequest(); err != nil {
+		service.log.Error().Err(err).Msgf("fail to validate request %+v", service.req)
+		return wd_response.FailJSON(ctx, http.StatusBadRequest, FailLogin)
+	}
+
+	member, err := service.repo.Find(ctx, service.req.Email)
+	if err != nil {
+		service.log.Error().Err(err).Msgf("fail to get member %+v", service.req)
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return wd_response.FailJSON(ctx, ErrCodeEmail, FailLogin)
+		}
+		return wd_response.FailJSON(ctx, http.StatusInternalServerError, FailLogin)
+	}
+
+	hashedPassword, err := service.getHashedPassword()
+	if err != nil {
+		service.log.Error().Err(err).Msgf("fail to hashing password %+v", service.req)
+		return wd_response.FailJSON(ctx, http.StatusBadRequest, FailLogin)
+	}
+
+	if hashedPassword != member.Password {
+		return wd_response.FailJSON(ctx, ErrCodePassword, FailLogin)
+	}
+
+	//Todo token create
+
 	return nil
 }
 

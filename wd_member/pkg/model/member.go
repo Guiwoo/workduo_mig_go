@@ -32,6 +32,10 @@ func (m *Member) create(ctx context.Context, db *gorm.DB) error {
 	return db.WithContext(ctx).Create(m).Error
 }
 
+func (m *Member) find(ctx context.Context, db *gorm.DB, email string) error {
+	return db.WithContext(ctx).Model(&Member{}).Take(m, "email = ?", email).Error
+}
+
 func (m *Member) HashPassword() error {
 	hash, err := bcrypt.GenerateFromPassword([]byte(m.Password), 10)
 	if err != nil {
@@ -39,4 +43,15 @@ func (m *Member) HashPassword() error {
 	}
 	m.Password = hex.EncodeToString(hash)
 	return nil
+}
+
+func CheckPassword(hashed string, password string) (bool, error) {
+	m := &Member{Password: password}
+	if err := m.HashPassword(); err != nil {
+		return false, err
+	}
+	if m.Password != hashed {
+		return false, nil
+	}
+	return true, nil
 }

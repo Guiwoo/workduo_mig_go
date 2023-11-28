@@ -14,11 +14,19 @@ var (
 type SuccessMock struct {
 }
 
+func (s *SuccessMock) Find(ctx echo.Context, email string) (*model.Member, error) {
+	panic("implement me")
+}
+
 func (s *SuccessMock) Create(ctx echo.Context, member *model.Member) error {
 	return nil
 }
 
 type FailMock struct {
+}
+
+func (f *FailMock) Find(ctx echo.Context, email string) (*model.Member, error) {
+	panic("implement me")
 }
 
 func (f *FailMock) Create(ctx echo.Context, member *model.Member) error {
