@@ -16,12 +16,12 @@ type responseGetCities struct {
 	SidoName string
 }
 
-type GetCitiesService struct {
+type GetCities struct {
 	db  *gorm.DB
 	log zerolog.Logger
 }
 
-func (service GetCitiesService) Handle(ctx echo.Context) error {
+func (service GetCities) Handle(ctx echo.Context) error {
 	tb := &model.SidoArea{}
 	data, err := tb.GetAllCity(ctx.Request().Context(), service.db)
 	if err != nil {
@@ -40,6 +40,6 @@ func (service GetCitiesService) Handle(ctx echo.Context) error {
 	return wd_response.SuccessJSON(ctx, sido)
 }
 
-func NewGetCitiesService(db *gorm.DB, log zerolog.Logger) *GetCitiesService {
-	return &GetCitiesService{db: db, log: log}
+func NewGetCities(db *gorm.DB, log zerolog.Logger) *GetCities {
+	return &GetCities{db: db, log: log}
 }

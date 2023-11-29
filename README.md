@@ -15,7 +15,7 @@
 <a href="https://alive-tern-b83.notion.site/WORKDUO-55b0477f47c74e0683678ba35d311968" target="_blank">API 명세서 보러가기 </a>
 
 ## 4. 개발환경 
-- Go 1.20.0
+- Go 1.21
 - MySql 8.0.25
 - Echo, GORM 은 Module 은 work 로 관리
 
@@ -28,25 +28,25 @@ workduo
 ├── go.work
 ├── common
 │   ├── database
-│   ├── entity
-│   │   ├── area  // 지역 
-│   ├── pipeline
+│   ├── log
+│   ├── streams
 │   ├── response
 │   ├── wrapper
 │   ├── go.mod
 ├── area
-│   ├── adapters
-│   ├── application
-│   │   ├── ports  
-│   │   ├── scheduler   
+│   ├── data
+│   ├── pkg
+│   │   ├── application  
+│   │   ├── config   
+│   │   ├── model   
 │   │   ├── service   
-│   ├── cmd
-│   ├── config
-│   ├── domain
-│   ├── infrastructure
-│   │   ├── persistence   
-│   ├── interfaces
-│   │   ├── data   
-│   │   ├── restapis  
-│   ├── go.mod
+│   ├── main.go
+├── member
+│   ├── pkg
+│   │   ├── application  
+│   │   ├── config   
+│   │   ├── model   
+│   │   ├── service   
+│   ├── main.go
+│   ├── go.mod   ├── go.mod
 ```

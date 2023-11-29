@@ -1,9 +1,7 @@
 go 1.21
 
-
-
 use (
 	./wd_common
 	./wd_area
-	./wd_user
+	./wd_member
 )

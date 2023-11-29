@@ -11,10 +11,10 @@ const URL = "/area/api/v1.0"
 
 type AreaRestAPI struct {
 	*wd_wrapper.EchoWrapper
-	service *service.AreaService
+	service *service.Area
 }
 
-func (api *AreaRestAPI) init() {
+func (api *AreaRestAPI) route() {
 	core := api.SetGroup(URL)
 	core.GET("/cities", api.service.GetCities.Handle)
 	core.GET("/sigg", api.service.GetSigg.Handle)
@@ -26,7 +26,7 @@ func NewAreaRestAPI(db *gorm.DB, port string, log zerolog.Logger) *AreaRestAPI {
 		service:     service.New(db, log),
 	}
 
-	api.init()
+	api.route()
 
 	return api
 }
