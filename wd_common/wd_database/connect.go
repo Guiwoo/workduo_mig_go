@@ -1,12 +1,17 @@
 package wd_database
 
 import (
+	"github.com/boltdb/bolt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"log"
 	"os"
 	"time"
+)
+
+var (
+	path = "private.db"
 )
 
 func Open(dsn string) (*gorm.DB, error) {
@@ -37,4 +42,23 @@ func Open(dsn string) (*gorm.DB, error) {
 	sqlDB.SetConnMaxLifetime(5 * time.Minute)
 	sqlDB.SetMaxOpenConns(10)
 	return db, err
+}
+
+var (
+	BoltDB *bolt.DB
+)
+
+func OpenVoltDB(dsn string) *bolt.DB {
+	bolt, err := bolt.Open(dsn, 0600, nil)
+	if err != nil {
+		log.Fatalf("can open volt db %+v", err)
+	}
+	return bolt
+}
+
+func ConnectPrivateVoltDB() *bolt.DB {
+	if BoltDB == nil {
+		BoltDB = OpenVoltDB("private.db")
+	}
+	return BoltDB
 }
