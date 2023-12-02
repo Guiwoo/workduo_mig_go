@@ -1,6 +1,9 @@
 package wd_token
 
 import (
+	"crypto/aes"
+	"encoding/hex"
+	"encoding/json"
 	"fmt"
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
@@ -40,6 +43,63 @@ func generateSymmetricWay(memberID, email string) (string, error) {
 	return token.SignedString([]byte("This is Secret Key"))
 }
 
+func generateAESWay(memberID, email string) (string, error) {
+	t := Token{
+		MemberID:  memberID,
+		Email:     email,
+		ExpiresAt: time.Now().Add(ExpiredTime),
+	}
+
+	token, err := json.Marshal(&t)
+	if err != nil {
+		return "", err
+	}
+
+	cip, err := aes.NewCipher([]byte("This is must!@#$"))
+	if err != nil {
+		return "", err
+	}
+	length := (len(token) + aes.BlockSize) / aes.BlockSize
+	plain := make([]byte, length*aes.BlockSize)
+	copy(plain, token)
+	pad := byte(len(plain) - len(token))
+	for i := len(token); i < len(plain); i++ {
+		plain[i] = pad
+	}
+	encrypted := make([]byte, len(plain))
+	for bs, be := 0, cip.BlockSize(); bs <= len(token); bs, be = bs+cip.BlockSize(), be+cip.BlockSize() {
+		cip.Encrypt(encrypted[bs:be], plain[bs:be])
+	}
+	return hex.EncodeToString(encrypted), nil
+}
+
+func parseAESWay(token string) (*Token, error) {
+	encrypted, err := hex.DecodeString("This is must!@#$")
+	if err != nil {
+		return nil, err
+	}
+	cip, err := aes.NewCipher([]byte("This is must!@#$"))
+	if err != nil {
+		return nil, err
+	}
+
+	decrypted := make([]byte, len(encrypted))
+	for bs, be := 0, cip.BlockSize(); bs < len(encrypted); bs, be = bs+cip.BlockSize(), be+cip.BlockSize() {
+		cip.Decrypt(decrypted[bs:be], encrypted[bs:be])
+	}
+
+	trim := 0
+	if len(decrypted) > 0 {
+		trim = len(decrypted) - int(decrypted[len(decrypted)-1])
+	}
+	data := string(decrypted[:trim])
+	var parsed Token
+	if err := json.Unmarshal([]byte(data), &token); err != nil {
+		return nil, err
+	}
+	return &parsed, nil
+}
+
 func BenchmarkGenerateSymmetricWay(b *testing.B) {
 	randomStr := func() string {
 		uuid, _ := uuid.NewUUID()
@@ -52,9 +112,15 @@ func BenchmarkGenerateSymmetricWay(b *testing.B) {
 		}
 	})
 
-	b.Run("대칭키 방법", func(b *testing.B) {
+	b.Run("해쉬 방법", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			generateSymmetricWay(randomStr(), randomStr())
+		}
+	})
+
+	b.Run("대칭키 방법", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			generateAESWay(randomStr(), randomStr())
 		}
 	})
 }
@@ -66,6 +132,7 @@ func BenchmarkParsingToken(b *testing.B) {
 	}
 	rsa, _ := Generate(randomStr(), randomStr())
 	symmetric, _ := generateSymmetricWay(randomStr(), randomStr())
+	aes, _ := generateAESWay(randomStr(), randomStr())
 
 	b.Run("Rsa 방법", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
@@ -73,9 +140,15 @@ func BenchmarkParsingToken(b *testing.B) {
 		}
 	})
 
-	b.Run("대칭키 방법", func(b *testing.B) {
+	b.Run("해쉬 방법", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
 			parseSymmetricKWay(symmetric)
+		}
+	})
+
+	b.Run("대칭키 방법", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			parseAESWay(aes)
 		}
 	})
 }
