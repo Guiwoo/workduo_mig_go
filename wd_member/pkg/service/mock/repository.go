@@ -2,6 +2,7 @@ package mock
 
 import (
 	"errors"
+	"fmt"
 	"github.com/labstack/echo/v4"
 	"wd_user/pkg/model"
 )
@@ -15,7 +16,7 @@ type SuccessMock struct {
 }
 
 func (s *SuccessMock) Find(ctx echo.Context, email string) (*model.Member, error) {
-	panic("implement me")
+	return &model.Member{}, nil
 }
 
 func (s *SuccessMock) Create(ctx echo.Context, member *model.Member) error {
@@ -26,7 +27,7 @@ type FailMock struct {
 }
 
 func (f *FailMock) Find(ctx echo.Context, email string) (*model.Member, error) {
-	panic("implement me")
+	return nil, fmt.Errorf("error occured")
 }
 
 func (f *FailMock) Create(ctx echo.Context, member *model.Member) error {

@@ -7,12 +7,13 @@ import (
 	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt"
+	"log"
 	"time"
 )
 
 const ExpiredTime = time.Minute * 10
 
-var PrivateKey *ecdsa.PrivateKey
+var privateKey *ecdsa.PrivateKey
 
 type Token struct {
 	MemberID  string
@@ -27,6 +28,17 @@ func (t *Token) Valid() error {
 	return nil
 }
 
+func getPrivateKey() *ecdsa.PrivateKey {
+	if privateKey == nil {
+		pk, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
+		if err != nil {
+			log.Fatalf("fail to generate private, public key pair %+v", err)
+		}
+		privateKey = pk
+	}
+	return privateKey
+}
+
 func Generate(memberID, email string) (string, error) {
 	t := Token{
 		MemberID:  memberID,
@@ -34,9 +46,8 @@ func Generate(memberID, email string) (string, error) {
 		ExpiresAt: time.Now().Add(ExpiredTime),
 	}
 
-	PrivateKey, _ = ecdsa.GenerateKey(elliptic.P256(), rand.Reader)
 	token := jwt.NewWithClaims(jwt.SigningMethodES256, &t)
-	return token.SignedString(PrivateKey)
+	return token.SignedString(getPrivateKey())
 }
 
 func Parse(tokenStr string) (*Token, error) {
@@ -48,7 +59,7 @@ func Parse(tokenStr string) (*Token, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodECDSA); !ok {
 			return nil, fmt.Errorf("unexpected signing method : %v", token.Header["alg"])
 		}
-		return PrivateKey.Public(), nil
+		return privateKey.Public(), nil
 	})
 	if err != nil {
 		return nil, err
