@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"regexp"
 	"wd_common/wd_response"
+	"wd_common/wd_token"
 	"wd_user/pkg/model"
 )
 
@@ -78,9 +79,14 @@ func (service *Login) Handle(ctx echo.Context) error {
 		return wd_response.FailJSON(ctx, ErrCodePassword, FailLogin)
 	}
 
-	//Todo token create
+	tkn, err := wd_token.Generate(member.MemberID, member.Email)
+	if err != nil {
+		return wd_response.FailJSON(ctx, http.StatusInternalServerError, FailLogin)
+	}
 
-	return nil
+	return wd_response.SuccessJSON(ctx, struct {
+		Token string `json:"token"`
+	}{Token: tkn})
 }
 
 func NewLogin(repo model.MemberRepository, log zerolog.Logger) *Login {
