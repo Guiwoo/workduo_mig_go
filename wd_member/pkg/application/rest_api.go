@@ -19,6 +19,8 @@ func (api *UserRestAPI) route() {
 
 	core.POST("/member", api.service.SignUp.Handle)
 	core.POST("/login", api.service.Login.Handle)
+	core.POST("/logout", api.service.Logout.Handle)
+	core.PATCH("/member", api.service.Update.Handle)
 }
 
 func NewUserRestAPI(db *gorm.DB, port string, log zerolog.Logger) *UserRestAPI {
