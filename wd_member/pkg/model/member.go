@@ -36,6 +36,16 @@ func (m *Member) find(ctx context.Context, db *gorm.DB, email string) error {
 	return db.WithContext(ctx).Model(&Member{}).Take(m, "email = ?", email).Error
 }
 
+func (m *Member) update(ctx context.Context, db *gorm.DB) error {
+	return db.WithContext(ctx).Where("member_id = ?", m.MemberID).Updates(map[string]interface{}{
+		"name":          m.Name,
+		"phone_number":  m.PhoneNumber,
+		"nickname":      m.Nickname,
+		"member_status": m.Status,
+		//todo aws img profile address
+	}).Error
+}
+
 func (m *Member) HashPassword() error {
 	hash, err := bcrypt.GenerateFromPassword([]byte(m.Password), 10)
 	if err != nil {
