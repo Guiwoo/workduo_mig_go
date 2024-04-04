@@ -3,6 +3,7 @@ package application
 import (
 	"github.com/rs/zerolog"
 	"gorm.io/gorm"
+	"wd_common/wd_middleware"
 	"wd_common/wd_wrapper"
 	"wd_user/pkg/service"
 )
@@ -15,7 +16,7 @@ type UserRestAPI struct {
 }
 
 func (api *UserRestAPI) route() {
-	core := api.SetGroup(URL)
+	core := api.SetGroup(URL, wd_middleware.Authorization)
 
 	core.POST("/member", api.service.SignUp.Handle)
 	core.POST("/login", api.service.Login.Handle)

@@ -8,6 +8,7 @@ import (
 type MemberRepository interface {
 	Create(ctx echo.Context, member *Member) error
 	Find(ctx echo.Context, email string) (*Member, error)
+	Update(ctx echo.Context, member *Member) error
 }
 
 type memberDB struct {
@@ -22,6 +23,10 @@ func (m *memberDB) Find(ctx echo.Context, email string) (tb *Member, err error) 
 	tb = &Member{}
 	err = tb.find(ctx.Request().Context(), m.db, email)
 	return tb, err
+}
+
+func (m *memberDB) Update(ctx echo.Context, member *Member) error {
+	return member.update(ctx.Request().Context(), m.db)
 }
 
 var _ MemberRepository = (*memberDB)(nil)
